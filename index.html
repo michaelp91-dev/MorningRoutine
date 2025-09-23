@@ -392,6 +392,34 @@
                 { text: "Grab backpack", emoji: "🎒" }
             ];
             
+            const kidsQuotes = [
+                { text: "You're off to great places! Today is your day!", source: "Dr. Seuss" },
+                { text: "Be silly, be honest, be kind.", source: "Ralph Waldo Emerson" },
+                { text: "The best way to cheer yourself up is to try to cheer somebody else up.", source: "Mark Twain" },
+                { text: "Always be a little kinder than necessary.", source: "J.M. Barrie" },
+                { text: "The more you read, the more things you will know. The more that you learn, the more places you'll go.", source: "Dr. Seuss" },
+                { text: "Today a reader, tomorrow a leader.", source: "Margaret Fuller" },
+                { text: "How wonderful it is that nobody need wait a single moment before starting to improve the world.", source: "Anne Frank" },
+                { text: "Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.", source: "Albus Dumbledore" },
+                { text: "You have a brain in your head. You have feet in your shoes. You can steer yourself any direction you choose.", source: "Dr. Seuss" },
+                { text: "Never give up on what you really want to do. The person with big dreams is more powerful than one with all the facts.", source: "H. Jackson Brown, Jr." },
+                { text: "The future belongs to those who believe in the beauty of their dreams.", source: "Eleanor Roosevelt" },
+                { text: "You can steer yourself in any direction you choose.", source: "Dr. Seuss" },
+                { text: "The world is full of magical things patiently waiting for our wits to grow sharper.", source: "Bertrand Russell" },
+                { text: "Believe you can and you're halfway there.", source: "Theodore Roosevelt" },
+                { text: "Kindness is a language which the deaf can hear and the blind can see.", source: "Mark Twain" },
+                { text: "The secret of getting ahead is getting started.", source: "Mark Twain" },
+                { text: "You're braver than you believe, and stronger than you seem, and smarter than you think.", source: "A.A. Milne" },
+                { text: "There is no limit to what you can do.", source: "Maya Angelou" },
+                { text: "Try to be a rainbow in someone's cloud.", source: "Maya Angelou" },
+                { text: "The only person you should try to be better than is the person you were yesterday.", source: "Unknown" },
+                { text: "Just keep swimming.", source: "Dory, Finding Nemo" },
+                { text: "We all can dance when we find music we love.", source: "Giles Andreae" },
+                { text: "If you can dream it, you can do it.", source: "Walt Disney" },
+                { text: "Don't just fly, soar.", source: "Dumbo" },
+                { text: "The only thing that is constant is change.", source: "Heraclitus" }
+            ];
+            
             let currentTaskIndex = 0;
             let currentRoutine = null;
             let quoteShown = false;
@@ -425,17 +453,25 @@
             // Render the current task in the center
             function renderCurrentTask() {
                 const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
+                const quotes = currentRoutine === 'dad' ? dadQuotes : kidsQuotes;
                 
-                if (currentRoutine === 'dad' && !quoteShown) {
-                    const randomQuote = dadQuotes[Math.floor(Math.random() * dadQuotes.length)];
+                if (!quoteShown) {
+                    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
                     currentTaskContainerEl.innerHTML = `
                         <p class="task-text text-xl font-medium italic mb-2">"${randomQuote.text}"</p>
                         <p class="text-sm font-light text-gray-600">- ${randomQuote.source}</p>
                         <button class="done-button mt-4">Ready to Start</button>
                     `;
                     currentTaskContainerEl.style.display = 'block';
-                    mainTitleEl.textContent = "Good Morning!";
-                    sidebarTitleEl.textContent = "Dad's Checklist";
+                    
+                    if (currentRoutine === 'dad') {
+                        mainTitleEl.textContent = "Good Morning!";
+                        sidebarTitleEl.textContent = "Dad's Checklist";
+                    } else {
+                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
+                        sidebarTitleEl.textContent = "Gentry's Morning Routine";
+                    }
+
                     quoteShown = true;
                     
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
@@ -485,7 +521,7 @@
                 const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
                 
                 // Mark the completed task in the sidebar only if it's a regular task, not the quote
-                if (currentRoutine === 'dad' && quoteShown && currentTaskIndex < tasks.length) {
+                if (quoteShown && currentTaskIndex < tasks.length) {
                     const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
                     if (sidebarItem) {
                         sidebarItem.classList.add('completed');
@@ -493,7 +529,7 @@
                 }
                 
                 // Trigger confetti for kids' tasks
-                if (currentRoutine === 'kids') {
+                if (currentRoutine === 'kids' && currentTaskIndex < tasks.length) {
                     createConfetti();
                 }
 
