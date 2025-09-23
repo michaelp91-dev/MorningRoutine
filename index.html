@@ -17,13 +17,29 @@
             padding: 1rem;
             color: #1e40af;
         }
-        .container {
+        .main-container {
+            display: flex;
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
             width: 100%;
-            max-width: 56rem;
+            max-width: 7xl;
+            min-height: 80vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            background-color: #dbeafe;
+            padding: 2.5rem;
+            width: 35%;
+            border-right: 2px solid #93c5fd;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
         h1 {
@@ -38,32 +54,40 @@
             color: #3b82f6;
             margin-bottom: 1.5rem;
         }
-        #current-task-container {
-            min-height: 10rem; /* Ensures the container doesn't jump */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
         }
-        .task-item {
-            display: none; /* Initially hide all tasks */
+        li {
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: text-decoration 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            color: #3b82f6;
+        }
+        li.completed {
+            text-decoration: line-through;
+            color: #93c5fd;
+            opacity: 0.7;
+        }
+        .current-task {
             animation: fadeIn 0.5s ease-in-out;
-            padding: 1rem;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .task-text {
-            font-size: 1.5rem;
-            font-weight: 500;
+            font-size: 2rem;
+            font-weight: 600;
             color: #1e40af;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         .done-button {
             background-color: #22c55e;
             color: white;
-            padding: 0.75rem 2rem;
+            padding: 1rem 2.5rem;
             border-radius: 9999px;
             font-weight: 700;
             transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -74,11 +98,17 @@
             background-color: #16a34a;
             transform: translateY(-2px);
         }
-        #kids-section, #tv-break-section {
+        #tv-break-section {
             display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+            background-color: #fef3c7;
         }
-        .celebration-message {
-            font-size: 3rem;
+        .tv-break-message {
+            font-size: 4rem;
             font-weight: 800;
             color: #f97316;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -95,7 +125,7 @@
             100% { color: #f97316; }
         }
         .emoji-container {
-            font-size: 4rem;
+            font-size: 5rem;
             margin-top: 1.5rem;
             animation: pulse 1s infinite;
         }
@@ -103,132 +133,143 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #93c5fd;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Dad's Section -->
-        <div id="dad-section">
-            <h1>Good Morning!</h1>
-            <h2>Dad's Morning Checklist</h2>
+    <div class="main-container">
+        <!-- Sidebar with all checklist items -->
+        <div class="sidebar">
+            <h2 id="sidebar-title">Dad's Checklist</h2>
+            <ul id="checklist-list" class="space-y-2">
+                <!-- Checklist items will be populated by JavaScript -->
+            </ul>
+        </div>
+        
+        <!-- Main content area for the current task -->
+        <div class="main-content" id="main-content-section">
+            <h1 id="main-title">Good Morning!</h1>
             <div id="current-task-container">
-                <!-- Task items will be populated by JavaScript -->
+                <!-- The current task will be displayed here -->
             </div>
         </div>
         
-        <!-- Kids' Section -->
-        <div id="kids-section">
-            <h1>Let's Get Ready, Superstars!</h1>
-            <h2>Kids' Morning Checklist</h2>
-            <div id="kids-current-task-container">
-                <!-- Kids' task items will be populated by JavaScript -->
-            </div>
-        </div>
-        
-        <!-- TV Break Section -->
-        <div id="tv-break-section" class="flex flex-col items-center justify-center">
-            <h1 class="celebration-message">TV BREAK!!!</h1>
+        <!-- TV Break Section (hidden by default) -->
+        <div id="tv-break-section">
+            <h1 class="tv-break-message">TV BREAK!!!</h1>
             <div class="emoji-container">📺🎉🎈🍿</div>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const dadTasks = [
-                "Wake up",
-                "Make bed",
-                "Brush teeth",
-                "Shower",
-                "Get dressed",
-                "7-minute morning workout",
-                "Morning devotional"
-            ];
-
-            const kidsTasks = [
-                "Wake up",
-                "Use the potty/bathroom",
-                "Get dressed",
-                "Brush teeth",
-                "Comb hair",
-                "Take medicine",
-                "Eat breakfast",
-                "Put on shoes",
-                "Grab backpack"
+            // Combined tasks for a single, unified list
+            const allTasks = [
+                { text: "Wake up", isKidsTask: false },
+                { text: "Make bed", isKidsTask: false },
+                { text: "Brush teeth", isKidsTask: false },
+                { text: "Shower", isKidsTask: false },
+                { text: "Get dressed", isKidsTask: false },
+                { text: "7-minute morning workout", isKidsTask: false },
+                { text: "Morning devotional", isKidsTask: false },
+                { text: "Wake up", isKidsTask: true },
+                { text: "Use the potty/bathroom", isKidsTask: true },
+                { text: "Get dressed", isKidsTask: true },
+                { text: "Brush teeth", isKidsTask: true },
+                { text: "Comb hair", isKidsTask: true },
+                { text: "Take medicine", isKidsTask: true },
+                { text: "Eat breakfast", isKidsTask: true },
+                { text: "Put on shoes", isKidsTask: true },
+                { text: "Grab backpack", isKidsTask: true },
             ];
             
-            let dadTaskIndex = 0;
-            let kidsTaskIndex = 0;
+            let currentTaskIndex = 0;
 
-            const dadSectionEl = document.getElementById('dad-section');
-            const kidsSectionEl = document.getElementById('kids-section');
+            const checklistListEl = document.getElementById('checklist-list');
+            const mainTitleEl = document.getElementById('main-title');
+            const sidebarTitleEl = document.getElementById('sidebar-title');
+            const currentTaskContainerEl = document.getElementById('current-task-container');
+            const mainContentEl = document.getElementById('main-content-section');
             const tvBreakSectionEl = document.getElementById('tv-break-section');
-            const currentTaskContainer = document.getElementById('current-task-container');
-            const kidsCurrentTaskContainer = document.getElementById('kids-current-task-container');
 
-            // Function to display the next task in the dad's list
-            function displayDadTask() {
-                if (dadTaskIndex < dadTasks.length) {
-                    currentTaskContainer.innerHTML = ''; // Clear previous task
-                    const task = dadTasks[dadTaskIndex];
-                    const taskDiv = document.createElement('div');
-                    taskDiv.className = 'task-item';
-                    taskDiv.innerHTML = `
-                        <p class="task-text">${task}</p>
+            // Render the full checklist in the sidebar
+            function renderSidebar() {
+                checklistListEl.innerHTML = '';
+                allTasks.forEach((task, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = task.text;
+                    li.dataset.index = index;
+                    checklistListEl.appendChild(li);
+                });
+            }
+
+            // Render the current task in the center
+            function renderCurrentTask() {
+                if (currentTaskIndex < allTasks.length) {
+                    const currentTask = allTasks[currentTaskIndex];
+                    currentTaskContainerEl.innerHTML = `
+                        <p class="task-text">${currentTask.text}</p>
                         <button class="done-button">Done!</button>
                     `;
-                    currentTaskContainer.appendChild(taskDiv);
-                    taskDiv.style.display = 'block';
+                    currentTaskContainerEl.style.display = 'block';
 
-                    const doneButton = taskDiv.querySelector('.done-button');
-                    doneButton.addEventListener('click', () => {
-                        dadTaskIndex++;
-                        displayDadTask();
-                    });
+                    // Update titles based on who is doing the task
+                    if (currentTask.isKidsTask) {
+                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
+                        sidebarTitleEl.textContent = "Kids' Checklist";
+                    } else {
+                        mainTitleEl.textContent = "Good Morning!";
+                        sidebarTitleEl.textContent = "Dad's Checklist";
+                    }
+
+                    // Add event listener to the new "Done" button
+                    const doneButton = currentTaskContainerEl.querySelector('.done-button');
+                    doneButton.addEventListener('click', handleTaskCompletion);
                 } else {
-                    // Dad's list is complete, show kids' section
-                    dadSectionEl.style.display = 'none';
-                    kidsSectionEl.style.display = 'block';
-                    displayKidsTask();
+                    // All tasks are complete
+                    mainContentEl.innerHTML = '<p class="text-xl font-bold text-green-600">You did it! Routine complete!</p>';
+                    sidebarTitleEl.textContent = "Routine Complete!";
                 }
             }
 
-            // Function to display the next task in the kids' list
-            function displayKidsTask() {
-                if (kidsTaskIndex < kidsTasks.length) {
-                    kidsCurrentTaskContainer.innerHTML = ''; // Clear previous task
-                    const task = kidsTasks[kidsTaskIndex];
-                    const taskDiv = document.createElement('div');
-                    taskDiv.className = 'task-item';
-                    taskDiv.innerHTML = `
-                        <p class="task-text">${task}</p>
-                        <button class="done-button">Done!</button>
-                    `;
-                    kidsCurrentTaskContainer.appendChild(taskDiv);
-                    taskDiv.style.display = 'block';
+            // Handle task completion logic
+            function handleTaskCompletion() {
+                const completedTask = allTasks[currentTaskIndex];
+                const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"]`);
+                if (sidebarItem) {
+                    sidebarItem.classList.add('completed');
+                }
 
-                    const doneButton = taskDiv.querySelector('.done-button');
-                    doneButton.addEventListener('click', () => {
-                        if (task === "Take medicine") {
-                            showTvBreakScreen();
-                        } else {
-                            kidsTaskIndex++;
-                            displayKidsTask();
-                        }
-                    });
+                if (completedTask.text === "Take medicine") {
+                    showTvBreakScreen();
                 } else {
-                    // Kids' list is complete
-                    kidsCurrentTaskContainer.innerHTML = '<p class="text-xl font-bold text-green-600">You did it! Routine complete!</p>';
+                    currentTaskIndex++;
+                    renderCurrentTask();
                 }
             }
 
-            // Function to display the TV Break screen
+            // Show the TV break screen
             function showTvBreakScreen() {
-                kidsSectionEl.style.display = 'none';
+                mainContentEl.style.display = 'none';
                 tvBreakSectionEl.style.display = 'flex';
             }
 
-            // Start the routine by showing the first dad task
-            displayDadTask();
+            // Initial render
+            renderSidebar();
+            renderCurrentTask();
         });
     </script>
 </body>
