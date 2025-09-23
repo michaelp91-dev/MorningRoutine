@@ -212,7 +212,7 @@
         <!-- TV Break Section (hidden by default) -->
         <div id="tv-break-section">
             <h1 class="tv-break-message">TV BREAK!!!</h1>
-            <div class="emoji-container">🦄📺🎉🎈🍿</div>
+            <div class="emoji-container">📺🎉🎈🍿</div>
             <button id="tv-break-done-button" class="done-button mt-8">Done with TV</button>
         </div>
     </div>
@@ -232,15 +232,15 @@
             ];
             
             const kidsTasks = [
-                { text: "Wake up like a magical unicorn", emoji: "🦄" },
-                { text: "Gallop to the potty", emoji: "🚽" },
-                { text: "Put on your sparkle outfit", emoji: "✨" },
-                { text: "Brush your pearly white teeth", emoji: "🦷" },
-                { text: "Comb your unicorn mane", emoji: "💖" },
-                { text: "Take your magical potion", emoji: "🪄" },
-                { text: "Feast on a rainbow breakfast", emoji: "🌈" },
-                { text: "Slip on your enchanted slippers", emoji: "👟" },
-                { text: "Grab your unicorn-adorned backpack", emoji: "🎒" }
+                { text: "Wake up", emoji: "☀️" },
+                { text: "Use the potty/bathroom", emoji: "🚽" },
+                { text: "Get dressed", emoji: "👕" },
+                { text: "Brush teeth", emoji: "🦷" },
+                { text: "Comb hair", emoji: "💇‍♀️" },
+                { text: "Take medicine", emoji: "💊" },
+                { text: "Eat breakfast", emoji: "🍳" },
+                { text: "Put on shoes", emoji: "👟" },
+                { text: "Grab backpack", emoji: "🎒" }
             ];
             
             let currentTaskIndex = 0;
@@ -331,7 +331,7 @@
                     createConfetti();
                 }
 
-                if (currentRoutine === 'kids' && tasks[currentTaskIndex].text === "Take your magical potion") {
+                if (currentRoutine === 'kids' && tasks[currentTaskIndex].text === "Take medicine") {
                     showTvBreakScreen();
                 } else {
                     currentTaskIndex++;
