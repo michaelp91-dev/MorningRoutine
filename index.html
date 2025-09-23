@@ -153,7 +153,7 @@
     <div class="main-container">
         <!-- Sidebar with all checklist items -->
         <div class="sidebar">
-            <h2 id="sidebar-title">Dad's Checklist</h2>
+            <h2 id="sidebar-title"></h2>
             <ul id="checklist-list" class="space-y-2">
                 <!-- Checklist items will be populated by JavaScript -->
             </ul>
@@ -161,7 +161,7 @@
         
         <!-- Main content area for the current task -->
         <div class="main-content" id="main-content-section">
-            <h1 id="main-title">Good Morning!</h1>
+            <h1 id="main-title"></h1>
             <div id="current-task-container">
                 <!-- The current task will be displayed here -->
             </div>
@@ -171,32 +171,36 @@
         <div id="tv-break-section">
             <h1 class="tv-break-message">TV BREAK!!!</h1>
             <div class="emoji-container">📺🎉🎈🍿</div>
+            <button id="tv-break-done-button" class="done-button mt-8">Done with TV</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Combined tasks for a single, unified list
-            const allTasks = [
-                { text: "Wake up", isKidsTask: false },
-                { text: "Make bed", isKidsTask: false },
-                { text: "Brush teeth", isKidsTask: false },
-                { text: "Shower", isKidsTask: false },
-                { text: "Get dressed", isKidsTask: false },
-                { text: "7-minute morning workout", isKidsTask: false },
-                { text: "Morning devotional", isKidsTask: false },
-                { text: "Wake up", isKidsTask: true },
-                { text: "Use the potty/bathroom", isKidsTask: true },
-                { text: "Get dressed", isKidsTask: true },
-                { text: "Brush teeth", isKidsTask: true },
-                { text: "Comb hair", isKidsTask: true },
-                { text: "Take medicine", isKidsTask: true },
-                { text: "Eat breakfast", isKidsTask: true },
-                { text: "Put on shoes", isKidsTask: true },
-                { text: "Grab backpack", isKidsTask: true },
+            const dadTasks = [
+                "Wake up",
+                "Make bed",
+                "Brush teeth",
+                "Shower",
+                "Get dressed",
+                "7-minute morning workout",
+                "Morning devotional"
+            ];
+            
+            const kidsTasks = [
+                "Wake up",
+                "Use the potty/bathroom",
+                "Get dressed",
+                "Brush teeth",
+                "Comb hair",
+                "Take medicine",
+                "Eat breakfast",
+                "Put on shoes",
+                "Grab backpack"
             ];
             
             let currentTaskIndex = 0;
+            let currentRoutine = 'dad';
 
             const checklistListEl = document.getElementById('checklist-list');
             const mainTitleEl = document.getElementById('main-title');
@@ -204,56 +208,69 @@
             const currentTaskContainerEl = document.getElementById('current-task-container');
             const mainContentEl = document.getElementById('main-content-section');
             const tvBreakSectionEl = document.getElementById('tv-break-section');
+            const tvBreakDoneButton = document.getElementById('tv-break-done-button');
 
             // Render the full checklist in the sidebar
-            function renderSidebar() {
+            function renderSidebar(tasks) {
                 checklistListEl.innerHTML = '';
-                allTasks.forEach((task, index) => {
+                tasks.forEach((task, index) => {
                     const li = document.createElement('li');
-                    li.textContent = task.text;
+                    li.textContent = task;
                     li.dataset.index = index;
+                    li.dataset.routine = currentRoutine;
                     checklistListEl.appendChild(li);
                 });
             }
 
             // Render the current task in the center
             function renderCurrentTask() {
-                if (currentTaskIndex < allTasks.length) {
-                    const currentTask = allTasks[currentTaskIndex];
+                const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
+                
+                if (currentTaskIndex < tasks.length) {
+                    const currentTask = tasks[currentTaskIndex];
                     currentTaskContainerEl.innerHTML = `
-                        <p class="task-text">${currentTask.text}</p>
+                        <p class="task-text">${currentTask}</p>
                         <button class="done-button">Done!</button>
                     `;
                     currentTaskContainerEl.style.display = 'block';
 
-                    // Update titles based on who is doing the task
-                    if (currentTask.isKidsTask) {
-                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
-                        sidebarTitleEl.textContent = "Kids' Checklist";
-                    } else {
+                    // Update titles
+                    if (currentRoutine === 'dad') {
                         mainTitleEl.textContent = "Good Morning!";
                         sidebarTitleEl.textContent = "Dad's Checklist";
+                    } else {
+                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
+                        sidebarTitleEl.textContent = "Kids' Checklist";
                     }
 
                     // Add event listener to the new "Done" button
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
                     doneButton.addEventListener('click', handleTaskCompletion);
                 } else {
-                    // All tasks are complete
-                    mainContentEl.innerHTML = '<p class="text-xl font-bold text-green-600">You did it! Routine complete!</p>';
-                    sidebarTitleEl.textContent = "Routine Complete!";
+                    // All tasks for the current routine are complete
+                    if (currentRoutine === 'dad') {
+                        currentRoutine = 'kids';
+                        currentTaskIndex = 0;
+                        renderSidebar(kidsTasks);
+                        renderCurrentTask();
+                    } else {
+                        mainContentEl.innerHTML = '<p class="text-xl font-bold text-green-600">Routine complete!</p>';
+                        sidebarTitleEl.textContent = "Great Job!";
+                    }
                 }
             }
 
             // Handle task completion logic
             function handleTaskCompletion() {
-                const completedTask = allTasks[currentTaskIndex];
-                const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"]`);
+                const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
+                
+                // Mark the completed task in the sidebar
+                const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
                 if (sidebarItem) {
                     sidebarItem.classList.add('completed');
                 }
 
-                if (completedTask.text === "Take medicine") {
+                if (currentRoutine === 'kids' && tasks[currentTaskIndex] === "Take medicine") {
                     showTvBreakScreen();
                 } else {
                     currentTaskIndex++;
@@ -267,8 +284,16 @@
                 tvBreakSectionEl.style.display = 'flex';
             }
 
+            // Handle the TV break "Done" button
+            tvBreakDoneButton.addEventListener('click', () => {
+                tvBreakSectionEl.style.display = 'none';
+                mainContentEl.style.display = 'flex';
+                currentTaskIndex++;
+                renderCurrentTask();
+            });
+
             // Initial render
-            renderSidebar();
+            renderSidebar(dadTasks);
             renderCurrentTask();
         });
     </script>
