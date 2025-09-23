@@ -198,6 +198,18 @@
             gap: 2rem;
             text-align: center;
         }
+        #menu-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        @media (min-width: 768px) {
+            #menu-buttons {
+                flex-direction: row;
+            }
+        }
 
         .menu-button {
             background-color: #fff;
@@ -215,9 +227,10 @@
             box-shadow: 0 10px 15px rgba(0,0,0,0.2);
         }
 
-        .menu-button .emoji {
+        .menu-button .emoji, .menu-button img {
             font-size: 3rem;
             margin-bottom: 0.5rem;
+            height: 3rem;
         }
     </style>
 </head>
@@ -226,9 +239,9 @@
         <!-- Menu Section (visible by default) -->
         <div id="routine-menu">
             <h1 class="text-3xl font-bold">Choose a Routine</h1>
-            <div id="menu-buttons" class="flex flex-col md:flex-row gap-8 mt-8">
+            <div id="menu-buttons">
                 <div class="menu-button" id="dad-button">
-                    <span class="emoji">👑🦁</span>
+                    <img src="https://placehold.co/100x100/ffffff/000000?text=Alpha+Lion" alt="Alpha Lion">
                     <h2 class="text-xl font-bold">Dad's Morning Routine</h2>
                 </div>
                 <div class="menu-button" id="gentry-button">
