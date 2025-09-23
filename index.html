@@ -230,6 +230,11 @@
                 "Do hair",
                 "Morning devotional"
             ];
+
+            const dadQuote = {
+                text: "The greatest legacy a man can leave is a life of faith, lived out in love for his family. Let's start the day with purpose.",
+                isQuote: true
+            };
             
             const kidsTasks = [
                 { text: "Wake up", emoji: "☀️" },
@@ -245,6 +250,7 @@
             
             let currentTaskIndex = 0;
             let currentRoutine = 'dad';
+            let quoteShown = false;
 
             const mainContainer = document.getElementById('main-container');
             const checklistListEl = document.getElementById('checklist-list');
@@ -272,7 +278,19 @@
             function renderCurrentTask() {
                 const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
                 
-                if (currentTaskIndex < tasks.length) {
+                if (currentRoutine === 'dad' && !quoteShown) {
+                    currentTaskContainerEl.innerHTML = `
+                        <p class="task-text text-xl font-medium italic mb-4">"${dadQuote.text}"</p>
+                        <button class="done-button">Ready to Start</button>
+                    `;
+                    currentTaskContainerEl.style.display = 'block';
+                    mainTitleEl.textContent = "Good Morning!";
+                    sidebarTitleEl.textContent = "Dad's Checklist";
+                    quoteShown = true;
+                    
+                    const doneButton = currentTaskContainerEl.querySelector('.done-button');
+                    doneButton.addEventListener('click', handleTaskCompletion);
+                } else if (currentTaskIndex < tasks.length) {
                     const currentTask = tasks[currentTaskIndex];
                     const taskText = typeof currentTask === 'object' ? `${currentTask.emoji} ${currentTask.text}` : currentTask;
                     
@@ -320,10 +338,12 @@
             function handleTaskCompletion() {
                 const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
                 
-                // Mark the completed task in the sidebar
-                const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
-                if (sidebarItem) {
-                    sidebarItem.classList.add('completed');
+                // Mark the completed task in the sidebar only if it's a regular task, not the quote
+                if (currentRoutine === 'dad' && quoteShown && currentTaskIndex < tasks.length) {
+                    const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
+                    if (sidebarItem) {
+                        sidebarItem.classList.add('completed');
+                    }
                 }
                 
                 // Trigger confetti for kids' tasks
