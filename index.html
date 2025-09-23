@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Daily Routine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            color: #1e40af;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 56rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 1.5rem;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            background-color: #eff6ff;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        li.completed {
+            background-color: #dbeafe;
+            text-decoration: line-through;
+            color: #60a5fa;
+        }
+        li:hover {
+            transform: translateY(-3px);
+            background-color: #dbeafe;
+        }
+        .checkbox-container {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 2px solid #3b82f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+        li.completed .checkbox-container {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        li.completed .checkbox-container svg {
+            fill: #ffffff;
+        }
+        .task-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            text-align: left;
+            flex-grow: 1;
+        }
+        #kids-section {
+            display: none;
+            position: relative;
+        }
+        .celebration-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f97316;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            animation: fadeInOut 2s forwards;
+            pointer-events: none;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 99;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f97316;
+            border-radius: 50%;
+            opacity: 0;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .tv-break-message {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #16a34a;
+            background-color: #dcfce7;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Dad's Section -->
+        <div id="dad-section">
+            <h1>Good Morning!</h1>
+            <h2>Dad's Morning Checklist</h2>
+            <ul id="dad-checklist" class="space-y-4">
+                <!-- Checklist items will be populated by JavaScript -->
+            </ul>
+        </div>
+        
+        <!-- Kids' Section -->
+        <div id="kids-section">
+            <h1>Let's Get Ready, Superstars!</h1>
+            <h2>Kids' Morning Checklist</h2>
+            <ul id="kids-checklist" class="space-y-4">
+                <!-- Kids' checklist items will be populated by JavaScript -->
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dadTasks = [
+                "Wake up",
+                "Make bed",
+                "Brush teeth",
+                "Shower",
+                "Get dressed",
+                "7-minute morning workout",
+                "Morning devotional"
+            ];
+
+            const kidsTasks = [
+                "Wake up",
+                "Use the potty/bathroom",
+                "Get dressed",
+                "Brush teeth",
+                "Comb hair",
+                "Take medicine",
+                "Eat breakfast",
+                "Put on shoes",
+                "Grab backpack"
+            ];
+            
+            const dadChecklistEl = document.getElementById('dad-checklist');
+            const kidsChecklistEl = document.getElementById('kids-checklist');
+            const dadSectionEl = document.getElementById('dad-section');
+            const kidsSectionEl = document.getElementById('kids-section');
+            
+            // Function to render a checklist
+            function renderChecklist(tasks, listElement, isKidsList = false) {
+                listElement.innerHTML = ''; // Clear existing items
+                tasks.forEach((task, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div class="checkbox-container">
+                            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="task-text">${task}</span>
+                    `;
+                    li.dataset.index = index;
+                    li.addEventListener('click', () => handleTaskCompletion(li, isKidsList, task));
+                    listElement.appendChild(li);
+                });
+            }
+
+            // Function to handle task completion
+            function handleTaskCompletion(taskElement, isKidsList, taskName) {
+                if (taskElement.classList.contains('completed')) {
+                    return; // Prevent unchecking for this simple prototype
+                }
+                
+                taskElement.classList.add('completed');
+                
+                if (isKidsList) {
+                    showFunCelebration();
+                    if (taskName === "Take medicine") {
+                        showTvBreakMessage();
+                    }
+                }
+
+                checkCompletion(isKidsList);
+            }
+
+            // Function to check if all tasks are completed
+            function checkCompletion(isKidsList) {
+                const list = isKidsList ? kidsChecklistEl : dadChecklistEl;
+                const completedTasks = list.querySelectorAll('li.completed').length;
+                const totalTasks = list.querySelectorAll('li').length;
+
+                if (completedTasks === totalTasks) {
+                    setTimeout(() => {
+                        if (!isKidsList) {
+                            dadSectionEl.style.display = 'none';
+                            kidsSectionEl.style.display = 'block';
+                            showCelebrationMessage("Great Job, Dad!");
+                        } else {
+                            showCelebrationMessage("You did it! Time for fun!");
+                        }
+                    }, 500);
+                }
+            }
+
+            // Fun celebration effects for kids
+            function showFunCelebration() {
+                const confettiContainer = document.querySelector('.confetti-container');
+                if (!confettiContainer) {
+                    const div = document.createElement('div');
+                    div.className = 'confetti-container';
+                    document.body.appendChild(div);
+                }
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.top = `${-10 - Math.random() * 20}vh`;
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                    document.querySelector('.confetti-container').appendChild(confetti);
+                }
+            }
+
+            function showCelebrationMessage(message) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'celebration-message';
+                messageEl.textContent = message;
+                document.body.appendChild(messageEl);
+
+                setTimeout(() => {
+                    messageEl.remove();
+                    const confettiContainer = document.querySelector('.confetti-container');
+                    if (confettiContainer) {
+                        confettiContainer.innerHTML = '';
+                    }
+                }, 2000);
+            }
+
+            function showTvBreakMessage() {
+                const tvMessageEl = document.createElement('div');
+                tvMessageEl.className = 'tv-break-message';
+                tvMessageEl.textContent = "TV Break Time!";
+                kidsSectionEl.appendChild(tvMessageEl);
+                setTimeout(() => {
+                    tvMessageEl.remove();
+                }, 3000);
+            }
+
+            // Initial render
+            renderChecklist(dadTasks, dadChecklistEl);
+            renderChecklist(kidsTasks, kidsChecklistEl, true);
+        });
+    </script>
+</body>
+</html>
