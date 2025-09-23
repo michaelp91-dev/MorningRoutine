@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Family Daily Routine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -38,114 +38,70 @@
             color: #3b82f6;
             margin-bottom: 1.5rem;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        li {
+        #current-task-container {
+            min-height: 10rem; /* Ensures the container doesn't jump */
             display: flex;
-            align-items: center;
-            background-color: #eff6ff;
-            border-radius: 0.75rem;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-            cursor: pointer;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        }
-        li.completed {
-            background-color: #dbeafe;
-            text-decoration: line-through;
-            color: #60a5fa;
-        }
-        li:hover {
-            transform: translateY(-3px);
-            background-color: #dbeafe;
-        }
-        .checkbox-container {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            border: 2px solid #3b82f6;
-            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
         }
-        li.completed .checkbox-container {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
+        .task-item {
+            display: none; /* Initially hide all tasks */
+            animation: fadeIn 0.5s ease-in-out;
+            padding: 1rem;
         }
-        li.completed .checkbox-container svg {
-            fill: #ffffff;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .task-text {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 500;
-            text-align: left;
-            flex-grow: 1;
+            color: #1e40af;
+            margin-bottom: 1.5rem;
         }
-        #kids-section {
+        .done-button {
+            background-color: #22c55e;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .done-button:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+        }
+        #kids-section, #tv-break-section {
             display: none;
-            position: relative;
         }
         .celebration-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 800;
             color: #f97316;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            animation: fadeInOut 2s forwards;
-            pointer-events: none;
+            animation: bounce 1s infinite, color-change 2s infinite;
         }
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 99;
+        @keyframes color-change {
+            0% { color: #f97316; }
+            33% { color: #3b82f6; }
+            66% { color: #16a34a; }
+            100% { color: #f97316; }
         }
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f97316;
-            border-radius: 50%;
-            opacity: 0;
-            animation: fall linear forwards;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100vh); opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
-        }
-        .tv-break-message {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #16a34a;
-            background-color: #dcfce7;
-            border-radius: 0.75rem;
-            padding: 1rem;
+        .emoji-container {
+            font-size: 4rem;
             margin-top: 1.5rem;
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.1); }
         }
     </style>
 </head>
@@ -155,18 +111,24 @@
         <div id="dad-section">
             <h1>Good Morning!</h1>
             <h2>Dad's Morning Checklist</h2>
-            <ul id="dad-checklist" class="space-y-4">
-                <!-- Checklist items will be populated by JavaScript -->
-            </ul>
+            <div id="current-task-container">
+                <!-- Task items will be populated by JavaScript -->
+            </div>
         </div>
         
         <!-- Kids' Section -->
         <div id="kids-section">
             <h1>Let's Get Ready, Superstars!</h1>
             <h2>Kids' Morning Checklist</h2>
-            <ul id="kids-checklist" class="space-y-4">
-                <!-- Kids' checklist items will be populated by JavaScript -->
-            </ul>
+            <div id="kids-current-task-container">
+                <!-- Kids' task items will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- TV Break Section -->
+        <div id="tv-break-section" class="flex flex-col items-center justify-center">
+            <h1 class="celebration-message">TV BREAK!!!</h1>
+            <div class="emoji-container">📺🎉🎈🍿</div>
         </div>
     </div>
     
@@ -194,115 +156,79 @@
                 "Grab backpack"
             ];
             
-            const dadChecklistEl = document.getElementById('dad-checklist');
-            const kidsChecklistEl = document.getElementById('kids-checklist');
+            let dadTaskIndex = 0;
+            let kidsTaskIndex = 0;
+
             const dadSectionEl = document.getElementById('dad-section');
             const kidsSectionEl = document.getElementById('kids-section');
-            
-            // Function to render a checklist
-            function renderChecklist(tasks, listElement, isKidsList = false) {
-                listElement.innerHTML = ''; // Clear existing items
-                tasks.forEach((task, index) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <div class="checkbox-container">
-                            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="task-text">${task}</span>
+            const tvBreakSectionEl = document.getElementById('tv-break-section');
+            const currentTaskContainer = document.getElementById('current-task-container');
+            const kidsCurrentTaskContainer = document.getElementById('kids-current-task-container');
+
+            // Function to display the next task in the dad's list
+            function displayDadTask() {
+                if (dadTaskIndex < dadTasks.length) {
+                    currentTaskContainer.innerHTML = ''; // Clear previous task
+                    const task = dadTasks[dadTaskIndex];
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-item';
+                    taskDiv.innerHTML = `
+                        <p class="task-text">${task}</p>
+                        <button class="done-button">Done!</button>
                     `;
-                    li.dataset.index = index;
-                    li.addEventListener('click', () => handleTaskCompletion(li, isKidsList, task));
-                    listElement.appendChild(li);
-                });
+                    currentTaskContainer.appendChild(taskDiv);
+                    taskDiv.style.display = 'block';
+
+                    const doneButton = taskDiv.querySelector('.done-button');
+                    doneButton.addEventListener('click', () => {
+                        dadTaskIndex++;
+                        displayDadTask();
+                    });
+                } else {
+                    // Dad's list is complete, show kids' section
+                    dadSectionEl.style.display = 'none';
+                    kidsSectionEl.style.display = 'block';
+                    displayKidsTask();
+                }
             }
 
-            // Function to handle task completion
-            function handleTaskCompletion(taskElement, isKidsList, taskName) {
-                if (taskElement.classList.contains('completed')) {
-                    return; // Prevent unchecking for this simple prototype
-                }
-                
-                taskElement.classList.add('completed');
-                
-                if (isKidsList) {
-                    showFunCelebration();
-                    if (taskName === "Take medicine") {
-                        showTvBreakMessage();
-                    }
-                }
+            // Function to display the next task in the kids' list
+            function displayKidsTask() {
+                if (kidsTaskIndex < kidsTasks.length) {
+                    kidsCurrentTaskContainer.innerHTML = ''; // Clear previous task
+                    const task = kidsTasks[kidsTaskIndex];
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-item';
+                    taskDiv.innerHTML = `
+                        <p class="task-text">${task}</p>
+                        <button class="done-button">Done!</button>
+                    `;
+                    kidsCurrentTaskContainer.appendChild(taskDiv);
+                    taskDiv.style.display = 'block';
 
-                checkCompletion(isKidsList);
-            }
-
-            // Function to check if all tasks are completed
-            function checkCompletion(isKidsList) {
-                const list = isKidsList ? kidsChecklistEl : dadChecklistEl;
-                const completedTasks = list.querySelectorAll('li.completed').length;
-                const totalTasks = list.querySelectorAll('li').length;
-
-                if (completedTasks === totalTasks) {
-                    setTimeout(() => {
-                        if (!isKidsList) {
-                            dadSectionEl.style.display = 'none';
-                            kidsSectionEl.style.display = 'block';
-                            showCelebrationMessage("Great Job, Dad!");
+                    const doneButton = taskDiv.querySelector('.done-button');
+                    doneButton.addEventListener('click', () => {
+                        if (task === "Take medicine") {
+                            showTvBreakScreen();
                         } else {
-                            showCelebrationMessage("You did it! Time for fun!");
+                            kidsTaskIndex++;
+                            displayKidsTask();
                         }
-                    }, 500);
+                    });
+                } else {
+                    // Kids' list is complete
+                    kidsCurrentTaskContainer.innerHTML = '<p class="text-xl font-bold text-green-600">You did it! Routine complete!</p>';
                 }
             }
 
-            // Fun celebration effects for kids
-            function showFunCelebration() {
-                const confettiContainer = document.querySelector('.confetti-container');
-                if (!confettiContainer) {
-                    const div = document.createElement('div');
-                    div.className = 'confetti-container';
-                    document.body.appendChild(div);
-                }
-                
-                for (let i = 0; i < 50; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = `${Math.random() * 100}vw`;
-                    confetti.style.top = `${-10 - Math.random() * 20}vh`;
-                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                    confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
-                    document.querySelector('.confetti-container').appendChild(confetti);
-                }
+            // Function to display the TV Break screen
+            function showTvBreakScreen() {
+                kidsSectionEl.style.display = 'none';
+                tvBreakSectionEl.style.display = 'flex';
             }
 
-            function showCelebrationMessage(message) {
-                const messageEl = document.createElement('div');
-                messageEl.className = 'celebration-message';
-                messageEl.textContent = message;
-                document.body.appendChild(messageEl);
-
-                setTimeout(() => {
-                    messageEl.remove();
-                    const confettiContainer = document.querySelector('.confetti-container');
-                    if (confettiContainer) {
-                        confettiContainer.innerHTML = '';
-                    }
-                }, 2000);
-            }
-
-            function showTvBreakMessage() {
-                const tvMessageEl = document.createElement('div');
-                tvMessageEl.className = 'tv-break-message';
-                tvMessageEl.textContent = "TV Break Time!";
-                kidsSectionEl.appendChild(tvMessageEl);
-                setTimeout(() => {
-                    tvMessageEl.remove();
-                }, 3000);
-            }
-
-            // Initial render
-            renderChecklist(dadTasks, dadChecklistEl);
-            renderChecklist(kidsTasks, kidsChecklistEl, true);
+            // Start the routine by showing the first dad task
+            displayDadTask();
         });
     </script>
 </body>
