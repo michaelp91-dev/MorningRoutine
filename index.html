@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff; /* White background for the initial menu */
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,6 +29,9 @@
             transition: background-color 0.5s ease-in-out;
         }
         /* Styles specific to the Dad's routine */
+        .dad-theme {
+            background-color: #dbeafe;
+        }
         .dad-theme .sidebar {
             background-color: #dbeafe;
             border-right: 2px solid #93c5fd;
@@ -47,18 +50,21 @@
         }
 
         /* Styles specific to the Kids' routine */
+        .kids-theme {
+            background-color: #fbcfe8;
+        }
         .kids-theme .sidebar {
-            background-color: #fbcfe8; /* Light pink sidebar */
+            background-color: #fbcfe8;
             border-right: 2px solid #f9a8d4;
         }
         .kids-theme h1, .kids-theme h2, .kids-theme li {
-            color: #be185d; /* Pink text */
+            color: #be185d;
         }
         .kids-theme li.completed {
-            color: #f9a8d4; /* Lighter pink for completed */
+            color: #f9a8d4;
         }
         .kids-theme .done-button {
-            background-color: #ec4899; /* Pink done button */
+            background-color: #ec4899;
         }
         .kids-theme .done-button:hover {
             background-color: #db2777;
@@ -167,7 +173,7 @@
             position: fixed;
             width: 10px;
             height: 10px;
-            background-color: #ffcc00; /* Default color */
+            background-color: #ffcc00;
             animation-name: confetti-fall;
             animation-timing-function: linear;
             animation-duration: 5s;
@@ -197,11 +203,14 @@
             justify-content: center;
             gap: 2rem;
             text-align: center;
+            width: 100%;
+            height: 100vh;
         }
         #menu-buttons {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -220,6 +229,10 @@
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             width: 100%;
             max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .menu-button:hover {
@@ -241,7 +254,7 @@
             <h1 class="text-3xl font-bold">Choose a Routine</h1>
             <div id="menu-buttons">
                 <div class="menu-button" id="dad-button">
-                    <img src="https://placehold.co/100x100/ffffff/000000?text=Alpha+Lion" alt="Alpha Lion">
+                    <img src="https://placehold.co/100x100/1C1C1C/ffffff?text=Alpha+Lion" alt="Alpha Lion">
                     <h2 class="text-xl font-bold">Dad's Morning Routine</h2>
                 </div>
                 <div class="menu-button" id="gentry-button">
@@ -432,18 +445,14 @@
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
                     doneButton.addEventListener('click', handleTaskCompletion);
                 } else {
-                    // All tasks for the current routine are complete
-                    if (currentRoutine === 'dad') {
-                        currentRoutine = 'kids';
-                        currentTaskIndex = 0;
-                        mainContainer.classList.remove('dad-theme');
-                        mainContainer.classList.add('kids-theme');
-                        renderSidebar(kidsTasks);
-                        renderCurrentTask();
-                    } else {
-                        mainContentSection.innerHTML = '<p class="text-xl font-bold text-green-600">Routine complete!</p>';
-                        sidebarTitleEl.textContent = "Great Job!";
-                    }
+                    // All tasks for the current routine are complete, go back to menu
+                    currentRoutine = null;
+                    currentTaskIndex = 0;
+                    quoteShown = false;
+                    mainContainer.classList.remove('dad-theme', 'kids-theme');
+                    sidebarSection.style.display = 'none';
+                    mainContentSection.style.display = 'none';
+                    menuSection.style.display = 'flex';
                 }
             }
 
@@ -474,7 +483,7 @@
             
             // Function to create and animate confetti
             function createConfetti() {
-                const colors = ['#f472b6', '#e879f9', '#c084fc', '#f9a8d4', '#d946ef', '#fbcfe8', '#f0abfc']; /* Unicorn-themed colors */
+                const colors = ['#f472b6', '#e879f9', '#c084fc', '#f9a8d4', '#d946ef', '#fbcfe8', '#f0abfc'];
                 const confettiCount = 100;
                 
                 for (let i = 0; i < confettiCount; i++) {
