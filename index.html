@@ -223,16 +223,16 @@
 
         .menu-button {
             position: relative;
-            background-color: #f3f4f6; /* Added a fallback background */
+            background-color: #f3f4f6;
             border-radius: 1rem;
-            padding: 0.5rem; /* Added padding to ensure visibility */
+            padding: 0.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             width: 100%;
             max-width: 300px;
             overflow: hidden;
-            display: flex; /* Flexbox for alignment */
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -244,7 +244,6 @@
             box-shadow: 0 10px 15px rgba(0,0,0,0.2);
         }
         
-        /* Image fills the entire button, but keeps aspect ratio */
         .menu-button img {
             width: 100%;
             height: auto;
@@ -256,12 +255,11 @@
             transform: scale(1.05);
         }
 
-        /* Text is centered below the image */
         .menu-button h2 {
-            position: static; /* Removed absolute positioning */
-            transform: none; /* Removed transform */
+            position: static;
+            transform: none;
             z-index: 3;
-            color: #1f2937; /* Darker color for readability on gray background */
+            color: #1f2937;
             text-shadow: none;
             width: auto;
             font-weight: 700;
@@ -326,58 +324,60 @@
             ];
 
             const dadQuotes = [
-                "A father is neither an anchor to hold us back nor a sail to take us there, but a guiding light whose love shows us the way.",
-                "Be a strong man of faith, not just for yourself, but so your children know what a righteous man looks like.",
-                "The greatest legacy a man can leave is a life of faith, lived out in love for his family. Let's start the day with purpose.",
-                "A father's love is a powerful compass that guides us through life's challenges.",
-                "Your children don't care how much money you make; they care about the time and love you give them.",
-                "Faith is not about knowing all the answers, but trusting in the One who does.",
-                "Being a dad is the most important and rewarding job a man can ever have.",
-                "Lead your family with a quiet strength that is rooted in your faith.",
-                "The heart of a father is the masterpiece of nature.",
-                "Pray not for an easy life, but for the strength to endure a difficult one with grace.",
-                "A strong man doesn't run from his responsibilities; he faces them with courage and faith.",
-                "Love your children unconditionally and show them the path of righteousness through your actions.",
-                "God has given you a mission as a father; live it out with purpose and passion.",
-                "A father's love is built on a foundation of patience, wisdom, and unending faith.",
-                "Be a role model of kindness, integrity, and faith for your kids to follow.",
-                "The strongest love a parent can give is the love of a father who is also a man of God.",
-                "Parenthood is a journey of growth, both for you and your children. Embrace it with a heart full of faith.",
-                "Let your faith be the rock that your family can always stand on.",
-                "A father's job is not just to provide, but to protect, to guide, and to love with a fierce heart.",
-                "Your actions as a father are a reflection of your character. Let them be a testament to your faith.",
-                "Faith is the compass that guides a father through the storms of life.",
-                "The world will change, but the love of a father and the strength of his faith are eternal.",
-                "A father's love is a gift that keeps on giving, and it is rooted in God's love.",
-                "Be the kind of man your children will be proud to become.",
-                "Through faith, a father can move mountains and build a legacy of love.",
-                "Teach your children to have faith, and they will never be truly lost.",
-                "A man of faith is a fortress for his family, and his love is their shield.",
-                "Lead with kindness, serve with humility, and love with all your heart.",
-                "The joy of fatherhood is a testament to the blessings of faith.",
-                "Every day is an opportunity to show your children what it means to be a man of faith.",
-                "A father's love is a beacon of hope in a world of uncertainty.",
-                "Be a living example of faith, and your children will be inspired for a lifetime.",
-                "The strength of a man is not in his muscles, but in the depth of his character and faith.",
-                "Your family is a sacred trust; honor it with a life of purpose and faith.",
-                "A father's love is the greatest treasure a child can possess.",
-                "Let your actions speak louder than your words, and let your faith be your guide.",
-                "The best gift you can give your children is the example of a life lived with faith and integrity.",
-                "A father's heart is a testament to the unwavering love of God.",
-                "Be a prayer warrior for your children, and they will be strong in faith.",
-                "The true measure of a man is in the way he loves and serves his family.",
-                "A father's wisdom is a timeless gift that is passed down through generations.",
-                "Live your life with an unwavering faith, and your children will follow your lead.",
-                "The love of a father is the most powerful force on earth.",
-                "A man of faith leads his family with a gentle hand and a loving heart.",
-                "Your children are a gift from God; cherish and protect them with all your heart.",
-                "The foundation of a happy home is built on a father's love and unwavering faith.",
-                "A father's love is a beacon of light that guides his children through the darkness.",
-                "Let your faith be the anchor that holds your family together in the storms of life.",
-                "A man of faith is a hero in the eyes of his children.",
-                "Your role as a father is a sacred calling; live it with a heart full of purpose and love.",
-                "The strength of a man is not in his power, but in the humility of his heart and the depth of his faith.",
-                "Be a man who is worthy of your children's love and respect, and they will be worthy of God's love."
+                { text: "A good father is one of the most unsung, unpraised, unnoticed, and yet one of the most valuable assets in our society.", source: "Billy Graham" },
+                { text: "My father didn't tell me how to live; he lived, and let me watch him do it.", source: "Clarence Budington Kelland" },
+                { text: "A father is a man who expects his son to be as good a man as he meant to be.", source: "Frank A. Clark" },
+                { text: "The greatest mark of a father is how he treats his children when no one is looking.", source: "Dan Pearce" },
+                { text: "I cannot think of any need in childhood as strong as the need for a father's protection.", source: "Sigmund Freud" },
+                { text: "A father's tears and fears are unseen, his love is unexpressed, but his care and protection remains as a pillar of strength throughout our lives.", source: "Ama H. Vanniarachchy" },
+                { text: "Any man can be a Father, but it takes someone special to be a dad.", source: "Anne Geddes" },
+                { text: "Being a great father is like shaving. No matter how good you shaved today, you have to do it again tomorrow.", source: "Reed Markham" },
+                { text: "A man never stands taller than when he kneels to help a child.", source: "Abraham Lincoln" },
+                { text: "The heart of a father is the masterpiece of nature.", source: "Antoine François Prévost" },
+                { text: "The most important thing a father can do for his children is to love their mother.", source: "Theodore Hesburgh" },
+                { text: "Of all the gifts a dad can give his kid, maybe the best one of all is a good example to follow.", source: "Joey Benevento" },
+                { text: "A father's love is forever imprinted on his child's heart.", source: "Jennifer Williamson" },
+                { text: "The father who does not teach his son his duties is equally guilty with the son who neglects them.", source: "Confucius" },
+                { text: "I am a princess not because I have a prince, but because my father is a king.", source: "Unknown" },
+                { text: "He was a father. That's what a father does. Eases the burdens of those he loves.", source: "J. August Strindberg" },
+                { text: "A man's worth is measured by how he parents his children. What he gives them, what he keeps away from them, the lessons he teaches and the lessons he allows them to learn on their own.", source: "Lisa Rogers" },
+                { text: "My father gave me the greatest gift anyone could give another person, he believed in me.", source: "Jim Valvano" },
+                { text: "There's no shame in fear, my father told me, what matters is how we face it.", source: "George R.R. Martin" },
+                { text: "A father is someone you look up to no matter how tall you grow.", source: "Unknown" },
+                { text: "Being a father has been, without a doubt, my greatest source of achievement, pride and inspiration.", source: "Naveen Jain" },
+                { text: "When I looked at you first I saw not your mother and me, but your two grandfathers.", source: "Peter Carey" },
+                { text: "It is easier for a father to have children than for children to have a real father.", source: "Pope John XXIII" },
+                { text: "God is our refuge and strength, a very present help in trouble.", source: "Psalm 46:1" },
+                { text: "And call no man your father on earth, for you have one Father, who is in heaven.", source: "Matthew 23:9" },
+                { text: "Train up a child in the way he should go; even when he is old he will not depart from it.", source: "Proverbs 22:6" },
+                { text: "Be watchful, stand firm in the faith, act like men, be strong.", source: "1 Corinthians 16:13" },
+                { text: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach, and it will be given him.", source: "James 1:5" },
+                { text: "When my father didn't have my hand... he had my back.", source: "Linda Poindexter" },
+                { text: "A father's love is a powerful compass that guides us through life's challenges.", source: "Unknown" },
+                { text: "God is the archetypal Father; all other fatherhood is a more or less imperfect copy of his perfect fatherhood.", source: "F.F. Bruce" },
+                { text: "The most valuable asset in our society is a good father.", source: "Billy Graham" },
+                { text: "What we become depends on what our fathers teach us at odd moments, when they aren't trying to teach us. We are formed by little scraps of wisdom.", source: "Umberto Eco" },
+                { text: "A man's worth is measured by how he parents his children.", source: "Lisa Rogers" },
+                { text: "My father gave me the greatest gift anyone could give another person, he believed in me.", source: "Jim Valvano" },
+                { text: "There's no shame in fear, my father told me, what matters is how we face it.", source: "George R.R. Martin" },
+                { text: "A father's love is forever imprinted on his child's heart.", source: "Jennifer Williamson" },
+                { text: "The father who does not teach his son his duties is equally guilty with the son who neglects them.", source: "Confucius" },
+                { text: "I am a princess not because I have a prince, but because my father is a king.", source: "Unknown" },
+                { text: "He was a father. That's what a father does. Eases the burdens of those he loves.", source: "J. August Strindberg" },
+                { text: "A man's worth is measured by how he parents his children. What he gives them, what he keeps away from them, the lessons he teaches and the lessons he allows them to learn on their own.", source: "Lisa Rogers" },
+                { text: "My father gave me the greatest gift anyone could give another person, he believed in me.", source: "Jim Valvano" },
+                { text: "There's no shame in fear, my father told me, what matters is how we face it.", source: "George R.R. Martin" },
+                { text: "A father is someone you look up to no matter how tall you grow.", source: "Unknown" },
+                { text: "Being a father has been, without a doubt, my greatest source of achievement, pride and inspiration.", source: "Naveen Jain" },
+                { text: "When I looked at you first I saw not your mother and me, but your two grandfathers.", source: "Peter Carey" },
+                { text: "It is easier for a father to have children than for children to have a real father.", source: "Pope John XXIII" },
+                { text: "God is our refuge and strength, a very present help in trouble.", source: "Psalm 46:1" },
+                { text: "And call no man your father on earth, for you have one Father, who is in heaven.", source: "Matthew 23:9" },
+                { text: "Train up a child in the way he should go; even when he is old he will not depart from it.", source: "Proverbs 22:6" },
+                { text: "Be watchful, stand firm in the faith, act like men, be strong.", source: "1 Corinthians 16:13" },
+                { text: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach, and it will be given him.", source: "James 1:5" },
+                { text: "When my father didn't have my hand... he had my back.", source: "Linda Poindexter" },
+                { text: "A father's love is a powerful compass that guides us through life's challenges.", source: "Unknown" }
             ];
             
             const kidsTasks = [
@@ -429,8 +429,9 @@
                 if (currentRoutine === 'dad' && !quoteShown) {
                     const randomQuote = dadQuotes[Math.floor(Math.random() * dadQuotes.length)];
                     currentTaskContainerEl.innerHTML = `
-                        <p class="task-text text-xl font-medium italic mb-4">"${randomQuote}"</p>
-                        <button class="done-button">Ready to Start</button>
+                        <p class="task-text text-xl font-medium italic mb-2">"${randomQuote.text}"</p>
+                        <p class="text-sm font-light text-gray-600">- ${randomQuote.source}</p>
+                        <button class="done-button mt-4">Ready to Start</button>
                     `;
                     currentTaskContainerEl.style.display = 'block';
                     mainTitleEl.textContent = "Good Morning!";
