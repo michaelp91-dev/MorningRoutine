@@ -217,14 +217,14 @@
         @media (min-width: 768px) {
             #menu-buttons {
                 flex-direction: row;
+                justify-content: center; /* This is the fix for horizontal centering */
             }
         }
 
         .menu-button {
             position: relative;
-            background-color: #fff;
+            background-color: #f0f0f0; /* Fallback background color */
             border-radius: 1rem;
-            padding: 0;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -232,6 +232,9 @@
             max-width: 300px;
             overflow: hidden;
             aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .menu-button:hover {
