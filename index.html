@@ -231,10 +231,60 @@
                 "Morning devotional"
             ];
 
-            const dadQuote = {
-                text: "The greatest legacy a man can leave is a life of faith, lived out in love for his family. Let's start the day with purpose.",
-                isQuote: true
-            };
+            const dadQuotes = [
+                "A father is neither an anchor to hold us back nor a sail to take us there, but a guiding light whose love shows us the way.",
+                "Be a strong man of faith, not just for yourself, but so your children know what a righteous man looks like.",
+                "The greatest legacy a man can leave is a life of faith, lived out in love for his family. Let's start the day with purpose.",
+                "A father's love is a powerful compass that guides us through life's challenges.",
+                "Your children don't care how much money you make; they care about the time and love you give them.",
+                "Faith is not about knowing all the answers, but trusting in the One who does.",
+                "Being a dad is the most important and rewarding job a man can ever have.",
+                "Lead your family with a quiet strength that is rooted in your faith.",
+                "The heart of a father is the masterpiece of nature.",
+                "Pray not for an easy life, but for the strength to endure a difficult one with grace.",
+                "A strong man doesn't run from his responsibilities; he faces them with courage and faith.",
+                "Love your children unconditionally and show them the path of righteousness through your actions.",
+                "God has given you a mission as a father; live it out with purpose and passion.",
+                "A father's love is built on a foundation of patience, wisdom, and unending faith.",
+                "Be a role model of kindness, integrity, and faith for your kids to follow.",
+                "The strongest love a parent can give is the love of a father who is also a man of God.",
+                "Parenthood is a journey of growth, both for you and your children. Embrace it with a heart full of faith.",
+                "Let your faith be the rock that your family can always stand on.",
+                "A father's job is not just to provide, but to protect, to guide, and to love with a fierce heart.",
+                "Your actions as a father are a reflection of your character. Let them be a testament to your faith.",
+                "Faith is the compass that guides a father through the storms of life.",
+                "The world will change, but the love of a father and the strength of his faith are eternal.",
+                "A father's love is a gift that keeps on giving, and it is rooted in God's love.",
+                "Be the kind of man your children will be proud to become.",
+                "Through faith, a father can move mountains and build a legacy of love.",
+                "Teach your children to have faith, and they will never be truly lost.",
+                "A man of faith is a fortress for his family, and his love is their shield.",
+                "Lead with kindness, serve with humility, and love with all your heart.",
+                "The joy of fatherhood is a testament to the blessings of faith.",
+                "Every day is an opportunity to show your children what it means to be a man of faith.",
+                "A father's love is a beacon of hope in a world of uncertainty.",
+                "Be a living example of faith, and your children will be inspired for a lifetime.",
+                "The strength of a man is not in his muscles, but in the depth of his character and faith.",
+                "Your family is a sacred trust; honor it with a life of purpose and faith.",
+                "A father's love is the greatest treasure a child can possess.",
+                "Let your actions speak louder than your words, and let your faith be your guide.",
+                "The best gift you can give your children is the example of a life lived with faith and integrity.",
+                "A father's heart is a testament to the unwavering love of God.",
+                "Be a prayer warrior for your children, and they will be strong in faith.",
+                "The true measure of a man is in the way he loves and serves his family.",
+                "A father's wisdom is a timeless gift that is passed down through generations.",
+                "Live your life with an unwavering faith, and your children will follow your lead.",
+                "The love of a father is the most powerful force on earth.",
+                "A man of faith leads his family with a gentle hand and a loving heart.",
+                "Your children are a gift from God; cherish and protect them with all your heart.",
+                "The foundation of a happy home is built on a father's love and unwavering faith.",
+                "A father's love is a beacon of light that guides his children through the darkness.",
+                "Let your faith be the anchor that holds your family together in the storms of life.",
+                "A man of faith is a hero in the eyes of his children.",
+                "Your role as a father is a sacred calling; live it with a heart full of purpose and love.",
+                "The strength of a man is not in his power, but in the humility of his heart and the depth of his faith.",
+                "Be a man who is worthy of your children's love and respect, and they will be worthy of God's love."
+            ];
             
             const kidsTasks = [
                 { text: "Wake up", emoji: "☀️" },
@@ -279,8 +329,9 @@
                 const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
                 
                 if (currentRoutine === 'dad' && !quoteShown) {
+                    const randomQuote = dadQuotes[Math.floor(Math.random() * dadQuotes.length)];
                     currentTaskContainerEl.innerHTML = `
-                        <p class="task-text text-xl font-medium italic mb-4">"${dadQuote.text}"</p>
+                        <p class="task-text text-xl font-medium italic mb-4">"${randomQuote}"</p>
                         <button class="done-button">Ready to Start</button>
                     `;
                     currentTaskContainerEl.style.display = 'block';
@@ -361,7 +412,7 @@
             
             // Function to create and animate confetti
             function createConfetti() {
-                const colors = ['#f472b6', '#e879f9', '#c084fc', '#f9a8d4', '#d946ef', '#fbcfe8', '#f0abfc']; // Unicorn-themed colors
+                const colors = ['#f472b6', '#e879f9', '#c084fc', '#f9a8d4', '#d946ef', '#fbcfe8', '#f0abfc']; /* Unicorn-themed colors */
                 const confettiCount = 100;
                 
                 for (let i = 0; i < confettiCount; i++) {
