@@ -265,6 +265,76 @@
             font-weight: 700;
             margin-top: 0.5rem;
         }
+        
+        /* New styles for the chores icon grid */
+        .chores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            width: 100%;
+        }
+
+        .chore-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: #fce7f3; /* Light pink background */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.3s, background-color 0.3s;
+            text-align: center;
+            min-height: 120px;
+        }
+
+        .chore-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 10px rgba(0,0,0,0.15);
+        }
+
+        .chore-icon.completed {
+            opacity: 0.5;
+            pointer-events: none;
+            background-color: #f9a8d4; /* Darker pink for completed */
+            color: #ffffff;
+        }
+
+        .chore-icon span {
+            font-size: 3rem;
+        }
+
+        .chore-icon p {
+            font-size: 0.875rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-top: 0.5rem;
+            color: #be185d;
+        }
+        
+        .chore-icon.completed p {
+             color: #ffffff;
+        }
+        
+        #payment-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #10b981; /* Green color for money */
+            margin-top: 1rem;
+            animation: popIn 0.3s ease-out;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #d1fae5;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
 
     </style>
 </head>
@@ -282,7 +352,7 @@
                     <h2 class="text-xl font-bold">Gentry's Morning Routine</h2>
                 </div>
                 <div class="menu-button" id="chores-button">
-                    <img src="unicorn.jpg" alt="Unicorn">
+                    <img src="unicorn.jpg" alt="Cute Sparkly Rainbow Star">
                     <h2 class="text-xl font-bold">Gentry's Chores Routine</h2>
                 </div>
                 </div>
@@ -391,19 +461,19 @@
                 { text: "Grab backpack", emoji: "🎒" }
             ];
 
-            // NEW CHORES DATA
+            // UPDATED CHORES DATA with payment info
             const choresTasks = [
-                { text: "Wipe down bathroom ($0.75/bathroom)", emoji: "🧽" },
-                { text: "Clean toilet ($0.75/toilet)", emoji: "🚽" },
-                { text: "Vacuum bathrooms and laundry room ($0.50/area)", emoji: "🧹" },
-                { text: "Trashes ($0.50/trash can)", emoji: "🗑️" },
-                { text: "Clean out car ($0.75/car)", emoji: "🚗" },
-                { text: "Dusting ($0.75)", emoji: "✨" },
-                { text: "Clean the shoe rack ($0.75)", emoji: "👟" },
-                { text: "Load/unload dishwasher ($0.50)", emoji: "🍽️" }
+                { text: "Wipe down bathroom", emoji: "🧽", amount: 0.75 },
+                { text: "Clean toilet", emoji: "🚽", amount: 0.75 },
+                { text: "Vacuum bathrooms and laundry room", emoji: "🧹", amount: 0.50 },
+                { text: "Trashes", emoji: "🗑️", amount: 0.50 },
+                { text: "Clean out car", emoji: "🚗", amount: 0.75 },
+                { text: "Dusting", emoji: "✨", amount: 0.75 },
+                { text: "Clean the shoe rack", emoji: "👟", amount: 0.75 },
+                { text: "Load/unload dishwasher", emoji: "🍽️", amount: 0.50 }
             ];
 
-            // Reusing kidsQuotes for the chores routine
+            // Reusing quotes for the chores routine
             const kidsQuotes = [
                 { text: "You're off to great places! Today is your day!", source: "Dr. Seuss" },
                 { text: "Be silly, be honest, be kind.", source: "Ralph Waldo Emerson" },
@@ -435,12 +505,12 @@
             let currentTaskIndex = 0;
             let currentRoutine = null;
             let quoteShown = false;
+            let completedChoreCount = 0; // To track progress on chores
 
             const mainContainer = document.getElementById('main-container');
             const menuSection = document.getElementById('routine-menu');
             const dadButton = document.getElementById('dad-button');
             const gentryButton = document.getElementById('gentry-button');
-            // NEW CHORES BUTTON ELEMENT
             const choresButton = document.getElementById('chores-button');
             const sidebarSection = document.getElementById('sidebar-section');
             const checklistListEl = document.getElementById('checklist-list');
@@ -455,22 +525,23 @@
             function getRoutineData() {
                 switch (currentRoutine) {
                     case 'dad':
-                        return { tasks: dadTasks, quotes: dadQuotes, mainTitle: "Good Morning!", sidebarTitle: "Dad's Checklist" };
+                        return { tasks: dadTasks, quotes: dadQuotes, mainTitle: "Good Morning!", sidebarTitle: "Dad's Checklist", type: 'list' };
                     case 'kids':
-                        return { tasks: kidsTasks, quotes: kidsQuotes, mainTitle: "Let's Get Ready, Superstars!", sidebarTitle: "Gentry's Morning Routine" };
+                        return { tasks: kidsTasks, quotes: kidsQuotes, mainTitle: "Let's Get Ready, Superstars!", sidebarTitle: "Gentry's Morning Routine", type: 'list' };
                     case 'chores':
-                        return { tasks: choresTasks, quotes: kidsQuotes, mainTitle: "Time to Earn!", sidebarTitle: "Gentry's Chores" };
+                        return { tasks: choresTasks, quotes: kidsQuotes, mainTitle: "Time to Earn!", sidebarTitle: "Gentry's Chores", type: 'grid' };
                     default:
-                        return { tasks: [], quotes: [], mainTitle: "", sidebarTitle: "" };
+                        return { tasks: [], quotes: [], mainTitle: "", sidebarTitle: "", type: 'list' };
                 }
             }
 
 
-            // Render the full checklist in the sidebar
+            // Render the full checklist in the sidebar (only used for 'list' type routines)
             function renderSidebar(tasks) {
                 checklistListEl.innerHTML = '';
                 tasks.forEach((task, index) => {
                     const li = document.createElement('li');
+                    // Handle objects for kids/chores, or strings for dad
                     const taskText = typeof task === 'object' ? `${task.emoji} ${task.text}` : task;
                     li.textContent = taskText;
                     li.dataset.index = index;
@@ -478,11 +549,121 @@
                     checklistListEl.appendChild(li);
                 });
             }
-
-            // Render the current task in the center
-            function renderCurrentTask() {
-                const { tasks, quotes, mainTitle, sidebarTitle } = getRoutineData();
+            
+            // Render the chore icon grid
+            function renderChoreGrid(tasks) {
+                currentTaskContainerEl.innerHTML = '<div class="chores-grid" id="chores-grid"></div><p id="total-earnings" class="text-xl font-bold text-pink-600 mt-6"></p>';
+                const choresGridEl = document.getElementById('chores-grid');
                 
+                tasks.forEach((chore, index) => {
+                    const iconDiv = document.createElement('div');
+                    iconDiv.classList.add('chore-icon');
+                    iconDiv.dataset.index = index;
+                    iconDiv.dataset.amount = chore.amount;
+                    iconDiv.innerHTML = `<span>${chore.emoji}</span><p>${chore.text}</p>`;
+                    choresGridEl.appendChild(iconDiv);
+                });
+
+                choresGridEl.addEventListener('click', handleChoreIconClick);
+                updateTotalEarnings();
+            }
+            
+            // Calculate and display total earnings for chores
+            function updateTotalEarnings() {
+                const total = Array.from(document.querySelectorAll('.chore-icon.completed')).reduce((sum, icon) => {
+                    return sum + parseFloat(icon.dataset.amount);
+                }, 0);
+                
+                const totalEl = document.getElementById('total-earnings');
+                if (totalEl) {
+                    totalEl.textContent = `Total Earned: $${total.toFixed(2)}`;
+                }
+            }
+
+            // Handle chore icon click
+            function handleChoreIconClick(event) {
+                let target = event.target.closest('.chore-icon');
+                if (!target || target.classList.contains('completed')) return;
+
+                const index = parseInt(target.dataset.index);
+                const amount = parseFloat(target.dataset.amount);
+                
+                // Mark as completed
+                target.classList.add('completed');
+                
+                // Mark in the sidebar checklist
+                const sidebarItem = document.querySelector(`li[data-index="${index}"][data-routine="${currentRoutine}"]`);
+                if (sidebarItem) {
+                    sidebarItem.classList.add('completed');
+                }
+
+                // Show payment popup (temporarily display in the main title area)
+                showPaymentMessage(amount);
+                
+                // Trigger confetti
+                createConfetti();
+                
+                // Update earnings
+                updateTotalEarnings();
+                
+                // Check if all chores are done
+                const tasks = getRoutineData().tasks;
+                completedChoreCount = document.querySelectorAll('.chore-icon.completed').length;
+                if (completedChoreCount === tasks.length) {
+                    setTimeout(() => {
+                        alert(`All chores complete! Total earned: $${document.getElementById('total-earnings').textContent.split('$')[1]}`);
+                        // Go back to the menu after a delay
+                        currentRoutine = null;
+                        currentTaskIndex = 0;
+                        quoteShown = false;
+                        mainContainer.classList.remove('dad-theme', 'kids-theme');
+                        sidebarSection.style.display = 'none';
+                        mainContentSection.style.display = 'none';
+                        menuSection.style.display = 'flex';
+                    }, 1000);
+                }
+            }
+            
+            function showPaymentMessage(amount) {
+                const quarters = amount * 4;
+                const message = `${quarters} Quarters ($${amount.toFixed(2)})`;
+                
+                // Create a temporary display element
+                let paymentDisplay = document.getElementById('payment-display');
+                if (!paymentDisplay) {
+                    paymentDisplay = document.createElement('div');
+                    paymentDisplay.id = 'payment-display';
+                    mainContentSection.appendChild(paymentDisplay);
+                }
+                
+                paymentDisplay.innerHTML = `+ ${message} 💰`;
+                
+                // Clear the message after a short time
+                clearTimeout(paymentDisplay.timer);
+                paymentDisplay.style.display = 'block';
+                paymentDisplay.timer = setTimeout(() => {
+                    paymentDisplay.style.display = 'none';
+                }, 1500);
+            }
+
+            // Render the current task in the center (used for 'list' type routines)
+            function renderCurrentTask() {
+                const { tasks, quotes, mainTitle, sidebarTitle, type } = getRoutineData();
+                
+                mainTitleEl.textContent = mainTitle;
+                sidebarTitleEl.textContent = sidebarTitle;
+                
+                if (type === 'grid') {
+                    // For chore routine, hide the current task text and show the grid
+                    currentTaskContainerEl.style.display = 'block';
+                    sidebarSection.style.display = 'block';
+                    renderSidebar(tasks); // Ensure the sidebar list is rendered
+                    renderChoreGrid(tasks);
+                    return; // Exit as grid handles interaction directly
+                }
+                
+                // --- Logic for 'list' routines (Dad's and Gentry's Morning) ---
+
                 if (!quoteShown) {
                     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
                     currentTaskContainerEl.innerHTML = `
@@ -490,11 +671,6 @@
                         <p class="text-sm font-light text-gray-600">- ${randomQuote.source}</p>
                         <button class="done-button mt-4">Ready to Start</button>
                     `;
-                    currentTaskContainerEl.style.display = 'block';
-                    
-                    mainTitleEl.textContent = mainTitle;
-                    sidebarTitleEl.textContent = sidebarTitle;
-
                     quoteShown = true;
                     
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
@@ -513,11 +689,6 @@
                         <p class="task-text">${taskText}</p>
                         <button class="done-button">Done!</button>
                     `;
-                    currentTaskContainerEl.style.display = 'block';
-
-                    // Update titles
-                    mainTitleEl.textContent = mainTitle;
-                    sidebarTitleEl.textContent = sidebarTitle;
 
                     // Add event listener to the new "Done" button
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
@@ -534,10 +705,12 @@
                 }
             }
 
-            // Handle task completion logic
+            // Handle task completion logic (used for 'list' type routines)
             function handleTaskCompletion() {
-                const { tasks } = getRoutineData();
+                const { tasks, type } = getRoutineData();
                 
+                if (type === 'grid') return; // Grid handles its own completion
+
                 // Mark the completed task in the sidebar only if it's a regular task, not the quote
                 if (quoteShown && currentTaskIndex < tasks.length) {
                     const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
@@ -546,12 +719,12 @@
                     }
                 }
                 
-                // Trigger confetti for kids' and chores tasks
-                if ((currentRoutine === 'kids' || currentRoutine === 'chores') && currentTaskIndex < tasks.length) {
+                // Trigger confetti for kids' tasks
+                if (currentRoutine === 'kids' && currentTaskIndex < tasks.length) {
                     createConfetti();
                 }
 
-                if (currentRoutine === 'kids' && tasks[currentTaskIndex].text === "Take medicine") {
+                if (currentRoutine === 'kids' && typeof tasks[currentTaskIndex] === 'object' && tasks[currentTaskIndex].text === "Take medicine") {
                     showTvBreakScreen();
                 } else {
                     currentTaskIndex++;
@@ -593,49 +766,41 @@
                 currentTaskIndex++;
                 renderCurrentTask();
             });
+            
+            function startRoutine(routineType, themeClass, tasks) {
+                currentRoutine = routineType;
+                // Clean up any old UI state
+                mainContainer.classList.remove('dad-theme', 'kids-theme');
+                mainContainer.classList.add(themeClass);
+                menuSection.style.display = 'none';
+                mainContentSection.style.display = 'flex';
+                sidebarSection.style.display = (routineType === 'chores') ? 'block' : 'block'; // Keep sidebar for visual checklist
+                
+                // Reset state
+                currentTaskIndex = 0;
+                quoteShown = false;
+                completedChoreCount = 0;
+                
+                // Hide any previous payment message
+                const paymentDisplay = document.getElementById('payment-display');
+                if (paymentDisplay) paymentDisplay.style.display = 'none';
+
+                renderCurrentTask(); // This function now handles list vs. grid rendering
+            }
+
 
             // Initial setup for the menu
             dadButton.addEventListener('click', () => {
-                currentRoutine = 'dad';
-                mainContainer.classList.remove('kids-theme'); // Clear previous theme
-                mainContainer.classList.add('dad-theme');
-                menuSection.style.display = 'none';
-                sidebarSection.style.display = 'block';
-                mainContentSection.style.display = 'flex';
-                renderSidebar(dadTasks);
-                // Reset to show the quote
-                currentTaskIndex = 0;
-                quoteShown = false;
-                renderCurrentTask();
+                startRoutine('dad', 'dad-theme', dadTasks);
             });
 
             gentryButton.addEventListener('click', () => {
-                currentRoutine = 'kids';
-                mainContainer.classList.remove('dad-theme'); // Clear previous theme
-                mainContainer.classList.add('kids-theme');
-                menuSection.style.display = 'none';
-                sidebarSection.style.display = 'block';
-                mainContentSection.style.display = 'flex';
-                renderSidebar(kidsTasks);
-                // Reset to show the quote
-                currentTaskIndex = 0;
-                quoteShown = false;
-                renderCurrentTask();
+                startRoutine('kids', 'kids-theme', kidsTasks);
             });
             
-            // NEW CHORES BUTTON EVENT LISTENER
+            // CHORES BUTTON EVENT LISTENER
             choresButton.addEventListener('click', () => {
-                currentRoutine = 'chores';
-                mainContainer.classList.remove('dad-theme'); // Clear previous theme
-                mainContainer.classList.add('kids-theme'); // Using kids-theme CSS
-                menuSection.style.display = 'none';
-                sidebarSection.style.display = 'block';
-                mainContentSection.style.display = 'flex';
-                renderSidebar(choresTasks);
-                // Reset to show the quote
-                currentTaskIndex = 0;
-                quoteShown = false;
-                renderCurrentTask();
+                startRoutine('chores', 'kids-theme', choresTasks);
             });
         });
     </script>
