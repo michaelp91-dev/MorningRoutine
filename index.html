@@ -270,7 +270,6 @@
 </head>
 <body>
     <div class="main-container" id="main-container">
-        <!-- Menu Section (visible by default) -->
         <div id="routine-menu">
             <h1 class="text-3xl font-bold">Choose a Routine</h1>
             <div id="menu-buttons">
@@ -282,26 +281,25 @@
                     <img src="unicorn.jpg" alt="Unicorn">
                     <h2 class="text-xl font-bold">Gentry's Morning Routine</h2>
                 </div>
-            </div>
+                <div class="menu-button" id="chores-button">
+                    <img src="unicorn.jpg" alt="Unicorn">
+                    <h2 class="text-xl font-bold">Gentry's Chores Routine</h2>
+                </div>
+                </div>
         </div>
 
-        <!-- Sidebar with all checklist items -->
         <div class="sidebar" id="sidebar-section" style="display: none;">
             <h2 id="sidebar-title"></h2>
             <ul id="checklist-list" class="space-y-2">
-                <!-- Checklist items will be populated by JavaScript -->
-            </ul>
+                </ul>
         </div>
         
-        <!-- Main content area for the current task -->
         <div class="main-content" id="main-content-section" style="display: none;">
             <h1 id="main-title"></h1>
             <div id="current-task-container" class="current-task">
-                <!-- The current task will be displayed here -->
-            </div>
+                </div>
         </div>
         
-        <!-- TV Break Section (hidden by default) -->
         <div id="tv-break-section" style="display: none;">
             <h1 class="tv-break-message">TV and BREAKFAST BREAK!!!</h1>
             <div class="emoji-container">📺🎉🎈🥞🧁</div>
@@ -392,7 +390,20 @@
                 { text: "Put on shoes", emoji: "👟" },
                 { text: "Grab backpack", emoji: "🎒" }
             ];
-            
+
+            // NEW CHORES DATA
+            const choresTasks = [
+                { text: "Wipe down bathroom ($0.75/bathroom)", emoji: "🧽" },
+                { text: "Clean toilet ($0.75/toilet)", emoji: "🚽" },
+                { text: "Vacuum bathrooms and laundry room ($0.50/area)", emoji: "🧹" },
+                { text: "Trashes ($0.50/trash can)", emoji: "🗑️" },
+                { text: "Clean out car ($0.75/car)", emoji: "🚗" },
+                { text: "Dusting ($0.75)", emoji: "✨" },
+                { text: "Clean the shoe rack ($0.75)", emoji: "👟" },
+                { text: "Load/unload dishwasher ($0.50)", emoji: "🍽️" }
+            ];
+
+            // Reusing kidsQuotes for the chores routine
             const kidsQuotes = [
                 { text: "You're off to great places! Today is your day!", source: "Dr. Seuss" },
                 { text: "Be silly, be honest, be kind.", source: "Ralph Waldo Emerson" },
@@ -429,6 +440,8 @@
             const menuSection = document.getElementById('routine-menu');
             const dadButton = document.getElementById('dad-button');
             const gentryButton = document.getElementById('gentry-button');
+            // NEW CHORES BUTTON ELEMENT
+            const choresButton = document.getElementById('chores-button');
             const sidebarSection = document.getElementById('sidebar-section');
             const checklistListEl = document.getElementById('checklist-list');
             const mainTitleEl = document.getElementById('main-title');
@@ -437,6 +450,21 @@
             const mainContentSection = document.getElementById('main-content-section');
             const tvBreakSectionEl = document.getElementById('tv-break-section');
             const tvBreakDoneButton = document.getElementById('tv-break-done-button');
+
+            // Helper function to get the correct tasks and quotes for the current routine
+            function getRoutineData() {
+                switch (currentRoutine) {
+                    case 'dad':
+                        return { tasks: dadTasks, quotes: dadQuotes, mainTitle: "Good Morning!", sidebarTitle: "Dad's Checklist" };
+                    case 'kids':
+                        return { tasks: kidsTasks, quotes: kidsQuotes, mainTitle: "Let's Get Ready, Superstars!", sidebarTitle: "Gentry's Morning Routine" };
+                    case 'chores':
+                        return { tasks: choresTasks, quotes: kidsQuotes, mainTitle: "Time to Earn!", sidebarTitle: "Gentry's Chores" };
+                    default:
+                        return { tasks: [], quotes: [], mainTitle: "", sidebarTitle: "" };
+                }
+            }
+
 
             // Render the full checklist in the sidebar
             function renderSidebar(tasks) {
@@ -453,8 +481,7 @@
 
             // Render the current task in the center
             function renderCurrentTask() {
-                const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
-                const quotes = currentRoutine === 'dad' ? dadQuotes : kidsQuotes;
+                const { tasks, quotes, mainTitle, sidebarTitle } = getRoutineData();
                 
                 if (!quoteShown) {
                     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -465,13 +492,8 @@
                     `;
                     currentTaskContainerEl.style.display = 'block';
                     
-                    if (currentRoutine === 'dad') {
-                        mainTitleEl.textContent = "Good Morning!";
-                        sidebarTitleEl.textContent = "Dad's Checklist";
-                    } else {
-                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
-                        sidebarTitleEl.textContent = "Gentry's Morning Routine";
-                    }
+                    mainTitleEl.textContent = mainTitle;
+                    sidebarTitleEl.textContent = sidebarTitle;
 
                     quoteShown = true;
                     
@@ -494,13 +516,8 @@
                     currentTaskContainerEl.style.display = 'block';
 
                     // Update titles
-                    if (currentRoutine === 'dad') {
-                        mainTitleEl.textContent = "Good Morning!";
-                        sidebarTitleEl.textContent = "Dad's Checklist";
-                    } else {
-                        mainTitleEl.textContent = "Let's Get Ready, Superstars!";
-                        sidebarTitleEl.textContent = "Gentry's Morning Routine";
-                    }
+                    mainTitleEl.textContent = mainTitle;
+                    sidebarTitleEl.textContent = sidebarTitle;
 
                     // Add event listener to the new "Done" button
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
@@ -519,7 +536,7 @@
 
             // Handle task completion logic
             function handleTaskCompletion() {
-                const tasks = currentRoutine === 'dad' ? dadTasks : kidsTasks;
+                const { tasks } = getRoutineData();
                 
                 // Mark the completed task in the sidebar only if it's a regular task, not the quote
                 if (quoteShown && currentTaskIndex < tasks.length) {
@@ -529,8 +546,8 @@
                     }
                 }
                 
-                // Trigger confetti for kids' tasks
-                if (currentRoutine === 'kids' && currentTaskIndex < tasks.length) {
+                // Trigger confetti for kids' and chores tasks
+                if ((currentRoutine === 'kids' || currentRoutine === 'chores') && currentTaskIndex < tasks.length) {
                     createConfetti();
                 }
 
@@ -580,21 +597,44 @@
             // Initial setup for the menu
             dadButton.addEventListener('click', () => {
                 currentRoutine = 'dad';
+                mainContainer.classList.remove('kids-theme'); // Clear previous theme
                 mainContainer.classList.add('dad-theme');
                 menuSection.style.display = 'none';
                 sidebarSection.style.display = 'block';
                 mainContentSection.style.display = 'flex';
                 renderSidebar(dadTasks);
+                // Reset to show the quote
+                currentTaskIndex = 0;
+                quoteShown = false;
                 renderCurrentTask();
             });
 
             gentryButton.addEventListener('click', () => {
                 currentRoutine = 'kids';
+                mainContainer.classList.remove('dad-theme'); // Clear previous theme
                 mainContainer.classList.add('kids-theme');
                 menuSection.style.display = 'none';
                 sidebarSection.style.display = 'block';
                 mainContentSection.style.display = 'flex';
                 renderSidebar(kidsTasks);
+                // Reset to show the quote
+                currentTaskIndex = 0;
+                quoteShown = false;
+                renderCurrentTask();
+            });
+            
+            // NEW CHORES BUTTON EVENT LISTENER
+            choresButton.addEventListener('click', () => {
+                currentRoutine = 'chores';
+                mainContainer.classList.remove('dad-theme'); // Clear previous theme
+                mainContainer.classList.add('kids-theme'); // Using kids-theme CSS
+                menuSection.style.display = 'none';
+                sidebarSection.style.display = 'block';
+                mainContentSection.style.display = 'flex';
+                renderSidebar(choresTasks);
+                // Reset to show the quote
+                currentTaskIndex = 0;
+                quoteShown = false;
                 renderCurrentTask();
             });
         });
