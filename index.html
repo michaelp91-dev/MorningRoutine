@@ -344,7 +344,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 2000;
@@ -440,11 +439,13 @@
         </div>
     </div>
 
+    <!-- NEW MODAL HTML -->
     <div id="quantity-modal-overlay" class="modal-overlay">
         <div class="modal-box">
             <h3 id="modal-question">Question goes here</h3>
             <div id="modal-options" class="modal-options-container">
-                </div>
+                <!-- Number buttons will be injected here by JS -->
+            </div>
             <button id="modal-cancel-button" class="modal-cancel-button">Cancel</button>
         </div>
     </div>
@@ -533,12 +534,11 @@
                 { text: "Grab backpack", emoji: "🎒" }
             ];
 
-            // *** UPDATED CHORES DATA ***
             const choresTasks = [
                 { 
                     text: "Wipe Down Bathroom Counter", 
                     emoji: "🧽", 
-                    amount: 0.75, // $0.75 (3 quarters)
+                    amount: 0.75,
                     isQuantifiable: true,
                     question: "How many bathroom counters wiped?",
                     options: [1, 2] 
@@ -546,7 +546,7 @@
                 { 
                     text: "Clean Toilet", 
                     emoji: "🚽", 
-                    amount: 0.75, // $0.75 (3 quarters)
+                    amount: 0.75,
                     isQuantifiable: true,
                     question: "How many toilets cleaned?",
                     options: [1, 2] 
@@ -554,7 +554,7 @@
                 { 
                     text: "Vacuum", 
                     emoji: "🧹", 
-                    amount: 0.50, // $0.50 (2 quarters)
+                    amount: 0.50,
                     isQuantifiable: true,
                     question: "How many areas vacuumed?",
                     options: [1, 2, 3, 4] 
@@ -562,7 +562,7 @@
                 { 
                     text: "Trashes", 
                     emoji: "🗑️", 
-                    amount: 0.50, // $0.50 (2 quarters)
+                    amount: 0.50,
                     isQuantifiable: true,
                     question: "How many trashes emptied?",
                     options: [1, 2, 3, 4] 
@@ -573,7 +573,6 @@
                 { text: "Load/unload dishwasher", emoji: "🍽️", amount: 0.50, isQuantifiable: false }
             ];
 
-            // Reusing quotes for the chores routine
             const kidsQuotes = [
                 { text: "You're off to great places! Today is your day!", source: "Dr. Seuss" },
                 { text: "Be silly, be honest, be kind.", source: "Ralph Waldo Emerson" },
@@ -605,7 +604,7 @@
             let currentTaskIndex = 0;
             let currentRoutine = null;
             let quoteShown = false;
-            let completedChoreCount = 0; // To track progress on chores
+            let completedChoreCount = 0; 
 
             const mainContainer = document.getElementById('main-container');
             const menuSection = document.getElementById('routine-menu');
@@ -620,14 +619,11 @@
             const mainContentSection = document.getElementById('main-content-section');
             const tvBreakSectionEl = document.getElementById('tv-break-section');
             const tvBreakDoneButton = document.getElementById('tv-break-done-button');
-
-            // NEW: Get Modal Elements
             const modalOverlay = document.getElementById('quantity-modal-overlay');
             const modalQuestion = document.getElementById('modal-question');
             const modalOptionsContainer = document.getElementById('modal-options');
             const modalCancelButton = document.getElementById('modal-cancel-button');
 
-            // Helper function to get the correct tasks and quotes for the current routine
             function getRoutineData() {
                 switch (currentRoutine) {
                     case 'dad':
@@ -641,13 +637,10 @@
                 }
             }
 
-
-            // Render the full checklist in the sidebar (only used for 'list' type routines)
             function renderSidebar(tasks) {
                 checklistListEl.innerHTML = '';
                 tasks.forEach((task, index) => {
                     const li = document.createElement('li');
-                    // Handle objects for kids/chores, or strings for dad
                     const taskText = typeof task === 'object' ? `${task.emoji} ${task.text}` : task;
                     li.textContent = taskText;
                     li.dataset.index = index;
@@ -656,87 +649,61 @@
                 });
             }
             
-            // Render the chore icon grid
             function renderChoreGrid(tasks) {
-                currentTaskContainerEl.innerHTML = '<div class="chores-grid" id="chores-grid"></div><p id="total-earnings" class="text-xl font-bold text-pink-600 mt-6"></p>';
+                currentTaskContainerEl.innerHTML = '<div class="chores-grid" id="chores-grid"></div>';
                 const choresGridEl = document.getElementById('chores-grid');
                 
                 tasks.forEach((chore, index) => {
                     const iconDiv = document.createElement('div');
                     iconDiv.classList.add('chore-icon');
                     iconDiv.dataset.index = index;
-                    iconDiv.dataset.amount = chore.amount; // Store the base amount
+                    iconDiv.dataset.amount = chore.amount;
                     iconDiv.innerHTML = `<span>${chore.emoji}</span><p>${chore.text}</p>`;
                     choresGridEl.appendChild(iconDiv);
                 });
 
                 choresGridEl.addEventListener('click', handleChoreIconClick);
-                updateTotalEarnings();
             }
             
-            // *** UPDATED: Calculate and display total earnings for chores ***
-            function updateTotalEarnings() {
-                const total = Array.from(document.querySelectorAll('.chore-icon.completed')).reduce((sum, icon) => {
-                    // Read from the 'data-earned-amount' which is set upon completion
-                    return sum + parseFloat(icon.dataset.earnedAmount || 0);
-                }, 0);
-                
-                const totalEl = document.getElementById('total-earnings');
-                if (totalEl) {
-                    totalEl.textContent = `Total Earned: $${total.toFixed(2)}`;
-                }
-            }
-
-            // *** UPDATED: Handle chore icon click ***
             function handleChoreIconClick(event) {
                 let target = event.target.closest('.chore-icon');
                 if (!target || target.classList.contains('completed')) return;
 
                 const index = parseInt(target.dataset.index);
-                const chore = choresTasks[index]; // Get the full chore object
+                const chore = choresTasks[index]; 
                 
                 if (chore.isQuantifiable) {
-                    // If it's a quantifiable chore, show the modal
                     showQuantityModal(chore, target);
                 } else {
-                    // Otherwise, complete it with the base amount
                     const amount = parseFloat(target.dataset.amount);
+                    target.dataset.earnedAmount = amount; // Store earned amount
                     completeChore(target, amount);
                 }
             }
 
-            // *** NEW: Function to handle the actual completion logic ***
             function completeChore(targetElement, amount) {
                 const index = parseInt(targetElement.dataset.index);
                 
-                // Store the final earned amount for the updateTotalEarnings function
-                targetElement.dataset.earnedAmount = amount;
-                
-                // Mark as completed
                 targetElement.classList.add('completed');
                 
-                // Mark in the sidebar checklist
                 const sidebarItem = document.querySelector(`li[data-index="${index}"][data-routine="${currentRoutine}"]`);
                 if (sidebarItem) {
                     sidebarItem.classList.add('completed');
                 }
 
-                // Show payment popup
                 showPaymentMessage(amount);
-                
-                // Trigger confetti
                 createConfetti();
                 
-                // Update earnings
-                updateTotalEarnings();
-                
-                // Check if all chores are done
                 const tasks = getRoutineData().tasks;
                 completedChoreCount = document.querySelectorAll('.chore-icon.completed').length;
                 if (completedChoreCount === tasks.length) {
                     setTimeout(() => {
-                        alert(`All chores complete! Total earned: $${document.getElementById('total-earnings').textContent.split('$')[1]}`);
-                        // Go back to the menu
+                        const totalEarned = Array.from(document.querySelectorAll('.chore-icon.completed')).reduce((sum, icon) => {
+                            return sum + (parseFloat(icon.dataset.earnedAmount) || 0);
+                        }, 0);
+
+                        alert(`All chores complete! Total earned: $${totalEarned.toFixed(2)}`);
+                        
                         currentRoutine = null;
                         currentTaskIndex = 0;
                         quoteShown = false;
@@ -748,10 +715,9 @@
                 }
             }
 
-            // *** NEW: Function to show the quantity modal ***
             function showQuantityModal(chore, targetElement) {
                 modalQuestion.textContent = chore.question;
-                modalOptionsContainer.innerHTML = ''; // Clear old buttons
+                modalOptionsContainer.innerHTML = '';
 
                 chore.options.forEach(number => {
                     const button = document.createElement('button');
@@ -760,6 +726,7 @@
                     button.addEventListener('click', () => {
                         const quantity = parseInt(number);
                         const totalAmount = chore.amount * quantity;
+                        targetElement.dataset.earnedAmount = totalAmount; // Store earned amount
                         completeChore(targetElement, totalAmount);
                         hideQuantityModal();
                     });
@@ -769,34 +736,38 @@
                 modalOverlay.style.display = 'flex';
             }
 
-            // *** NEW: Function to hide the quantity modal ***
             function hideQuantityModal() {
                 modalOverlay.style.display = 'none';
             }
             
+            // *** MODIFIED: This function now displays dollars and quarters ***
             function showPaymentMessage(amount) {
-                const quarters = amount / 0.25; // Calculate quarters from final dollar amount
-                const message = `${quarters} Quarters ($${amount.toFixed(2)})`;
+                const dollars = Math.floor(amount);
+                const cents = Math.round((amount - dollars) * 100);
+                const quarters = cents / 25;
+
+                let messageParts = [];
+                if (dollars > 0) {
+                    messageParts.push(`${dollars} 💵`);
+                }
+                if (quarters > 0) {
+                    messageParts.push(`${quarters} 🪙`);
+                }
                 
-                // Create a temporary display element
+                const message = messageParts.join(' ');
+                
                 let paymentDisplay = document.getElementById('payment-display');
                 if (!paymentDisplay) {
                     paymentDisplay = document.createElement('div');
                     paymentDisplay.id = 'payment-display';
-                    mainContentSection.appendChild(paymentDisplay);
+                    // Append it inside the main content, but after the grid
+                    currentTaskContainerEl.appendChild(paymentDisplay);
                 }
                 
-                paymentDisplay.innerHTML = `+ ${message} 💰🪙`;
-                
-                // Clear the message after a short time
-                clearTimeout(paymentDisplay.timer);
+                paymentDisplay.innerHTML = `+ ${message}`;
                 paymentDisplay.style.display = 'block';
-                paymentDisplay.timer = setTimeout(() => {
-                    paymentDisplay.style.display = 'none';
-                }, 3000);
             }
 
-            // Render the current task in the center (used for 'list' type routines)
             function renderCurrentTask() {
                 const { tasks, quotes, mainTitle, sidebarTitle, type } = getRoutineData();
                 
@@ -804,15 +775,12 @@
                 sidebarTitleEl.textContent = sidebarTitle;
                 
                 if (type === 'grid') {
-                    // For chore routine, hide the current task text and show the grid
                     currentTaskContainerEl.style.display = 'block';
                     sidebarSection.style.display = 'block';
-                    renderSidebar(tasks); // Ensure the sidebar list is rendered
+                    renderSidebar(tasks);
                     renderChoreGrid(tasks);
-                    return; // Exit as grid handles interaction directly
+                    return;
                 }
-                
-                // --- Logic for 'list' routines (Dad's and Gentry's Morning) ---
 
                 if (!quoteShown) {
                     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -829,10 +797,9 @@
                     const currentTask = tasks[currentTaskIndex];
                     const taskText = typeof currentTask === 'object' ? `${currentTask.emoji} ${currentTask.text}` : currentTask;
                     
-                    // Clear the current task and add the fade-in class for transition
                     currentTaskContainerEl.innerHTML = '';
                     currentTaskContainerEl.classList.remove('current-task');
-                    void currentTaskContainerEl.offsetWidth; // Trigger reflow to restart animation
+                    void currentTaskContainerEl.offsetWidth;
                     currentTaskContainerEl.classList.add('current-task');
 
                     currentTaskContainerEl.innerHTML = `
@@ -840,11 +807,9 @@
                         <button class="done-button">Done!</button>
                     `;
 
-                    // Add event listener to the new "Done" button
                     const doneButton = currentTaskContainerEl.querySelector('.done-button');
                     doneButton.addEventListener('click', handleTaskCompletion);
                 } else {
-                    // All tasks for the current routine are complete, go back to menu
                     currentRoutine = null;
                     currentTaskIndex = 0;
                     quoteShown = false;
@@ -855,13 +820,11 @@
                 }
             }
 
-            // Handle task completion logic (used for 'list' type routines)
             function handleTaskCompletion() {
                 const { tasks, type } = getRoutineData();
                 
-                if (type === 'grid') return; // Grid handles its own completion
+                if (type === 'grid') return;
 
-                // Mark the completed task in the sidebar only if it's a regular task, not the quote
                 if (quoteShown && currentTaskIndex < tasks.length) {
                     const sidebarItem = document.querySelector(`li[data-index="${currentTaskIndex}"][data-routine="${currentRoutine}"]`);
                     if (sidebarItem) {
@@ -869,7 +832,6 @@
                     }
                 }
                 
-                // Trigger confetti for kids' tasks
                 if (currentRoutine === 'kids' && currentTaskIndex < tasks.length) {
                     createConfetti();
                 }
@@ -882,7 +844,6 @@
                 }
             }
             
-            // Function to create and animate confetti
             function createConfetti() {
                 const colors = ['#f472b6', '#e879f9', '#c084fc', '#f9a8d4', '#d946ef', '#fbcfe8', '#f0abfc'];
                 const confettiCount = 100;
@@ -896,20 +857,17 @@
                     confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
                     document.body.appendChild(confetti);
 
-                    // Remove confetti after animation to prevent memory issues
                     confetti.addEventListener('animationend', () => {
                         confetti.remove();
                     });
                 }
             }
 
-            // Show the TV break screen
             function showTvBreakScreen() {
                 mainContentSection.style.display = 'none';
                 tvBreakSectionEl.style.display = 'flex';
             }
 
-            // Handle the TV break "Done" button
             tvBreakDoneButton.addEventListener('click', () => {
                 tvBreakSectionEl.style.display = 'none';
                 mainContentSection.style.display = 'flex';
@@ -917,46 +875,38 @@
                 renderCurrentTask();
             });
             
-            function startRoutine(routineType, themeClass, tasks) {
+            function startRoutine(routineType, themeClass) {
                 currentRoutine = routineType;
-                // Clean up any old UI state
                 mainContainer.classList.remove('dad-theme', 'kids-theme');
                 mainContainer.classList.add(themeClass);
                 menuSection.style.display = 'none';
                 mainContentSection.style.display = 'flex';
                 sidebarSection.style.display = 'block';
                 
-                // Reset state
                 currentTaskIndex = 0;
                 quoteShown = false;
                 completedChoreCount = 0;
                 
-                // Hide any previous payment message
                 const paymentDisplay = document.getElementById('payment-display');
                 if (paymentDisplay) paymentDisplay.style.display = 'none';
 
-                renderCurrentTask(); // This function now handles list vs. grid rendering
+                renderCurrentTask();
             }
 
-
-            // Initial setup for the menu
             dadButton.addEventListener('click', () => {
-                startRoutine('dad', 'dad-theme', dadTasks);
+                startRoutine('dad', 'dad-theme');
             });
 
             gentryButton.addEventListener('click', () => {
-                startRoutine('kids', 'kids-theme', kidsTasks);
+                startRoutine('kids', 'kids-theme');
             });
             
-            // CHORES BUTTON EVENT LISTENER
             choresButton.addEventListener('click', () => {
-                startRoutine('chores', 'kids-theme', choresTasks);
+                startRoutine('chores', 'kids-theme');
             });
 
-            // NEW: Event listeners for the modal
             modalCancelButton.addEventListener('click', hideQuantityModal);
             modalOverlay.addEventListener('click', (event) => {
-                // Only close if clicking on the overlay itself, not the box inside
                 if (event.target === modalOverlay) {
                     hideQuantityModal();
                 }
@@ -965,3 +915,4 @@
     </script>
 </body>
 </html>
+
