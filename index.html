@@ -636,14 +636,14 @@
                     mainContentSection.appendChild(paymentDisplay);
                 }
                 
-                paymentDisplay.innerHTML = `+ ${message} 💰`;
+                paymentDisplay.innerHTML = `+ ${message} 💰🪙`;
                 
                 // Clear the message after a short time
                 clearTimeout(paymentDisplay.timer);
                 paymentDisplay.style.display = 'block';
                 paymentDisplay.timer = setTimeout(() => {
                     paymentDisplay.style.display = 'none';
-                }, 1500);
+                }, 3000); // MODIFIED: Changed from 1500 to 3000
             }
 
             // Render the current task in the center (used for 'list' type routines)
